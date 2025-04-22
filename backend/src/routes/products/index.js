@@ -3,9 +3,11 @@ import { z } from "zod";
 
 const RegexMongoObjectId = /^[0-9a-fA-F]{24}$/;
 
-const idSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, {
+const idSchema = z.string().regex(RegexMongoObjectId, {
   message: "Invalid ObjectId format",
 });
+
+const slugSchema = z.string().toLowerCase();
 
 const productSchema = z
   .object({
@@ -14,7 +16,7 @@ const productSchema = z
     price: z.number().min(0),
     images: z.array(z.string()),
     sku: z.string(),
-    slug: z.string(),
+    slug: z.string().toLowerCase(),
     categoryId: z.string().regex(RegexMongoObjectId),
     isActive: z.boolean().default(true),
   })
@@ -31,17 +33,21 @@ const productRoutes = [
   },
   {
     method: "get",
-    path: "/products/:id",
+    path: "/products/:slug",
     handler: async (req, res) => {
       try {
-        const { id } = req.params;
+        const { slug } = req.params;
 
-        const result = idSchema.safeParse(id);
-        if (!result.success) {
-          return res.status(400).json({ message: "Bad user input" });
+        const response = slugSchema.safeParse(slug);
+        if (!response.success) {
+          return res
+            .status(400)
+            .json({ message: "Bad user input", issues: response.error.issues });
         }
 
-        const product = await Product.findById(id).populate(["category"]);
+        const product = await Product.findOne({ slug: response.data }).populate(
+          ["category"]
+        );
 
         if (!product) {
           return res.status(404).json({ message: "Product not found" });
@@ -53,7 +59,6 @@ const productRoutes = [
       }
     },
   },
-
   {
     method: "post",
     path: "/products",
@@ -62,11 +67,11 @@ const productRoutes = [
         const response = productSchema.safeParse(req.body);
 
         if (!response.success) {
-          return res.status(400).json({
-            message: "Bad user input",
-            issues: response.error.issues,
-          });
+          return res
+            .status(400)
+            .json({ message: "Bad user input", issues: response.error.issues });
         }
+
         const category = await Category.findById(response.data.categoryId);
 
         if (!category) {
@@ -79,7 +84,8 @@ const productRoutes = [
         });
 
         return res.status(200).json(product);
-      } catch {
+      } catch (e) {
+        console.log(e);
         return res.status(500).json({ message: "Internal error" });
       }
     },

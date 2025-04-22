@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Product from "../components/Product";
 import { getProducts } from "../services/products";
-
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
@@ -22,6 +21,7 @@ export default function ProductsPage() {
               images={product.images}
               category={product.category}
               price={product.price}
+              slug={product.slug}
             />
           ))}
         </div>

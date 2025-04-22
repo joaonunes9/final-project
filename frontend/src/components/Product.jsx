@@ -1,8 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
-export default function Product({ name, images, category, price }) {
+export default function Product({ name, images, category, price, slug }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
+    <div
+      className="lg:w-1/4 md:w-1/2 p-4 w-full cursor-pointer hover:bg-slate-50 rounded-sm"
+      onClick={() => navigate(`/products/${slug}`)}
+    >
       <a className="block relative h-48 rounded overflow-hidden">
         <img
           alt={name}
