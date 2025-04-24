@@ -1,3 +1,5 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const getCategories = async () => {
-  return fetch("http://localhost:3000/categories").then((resp) => resp.json());
+  return fetch(backendUrl + "/categories").then((resp) => resp.json());
 };

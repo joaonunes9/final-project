@@ -26,7 +26,7 @@ export const orderSchema = new mongoose.Schema(
     ],
     paymentStatus: {
       type: String,
-      enum: ["peding", "paid", "failed", "refunded"],
+      enum: ["pending", "paid", "failed", "refunded"],
     },
     stripePaymentId: {
       type: String,
