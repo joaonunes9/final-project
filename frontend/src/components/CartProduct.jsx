@@ -8,15 +8,15 @@ export default function CartProduct({ product }) {
   return (
     <div className="flex gap-4 p-4 items-center">
       <img
-        onClick={() => navigate(`/products/${product.id}`)}
-        src={product.image}
+        onClick={() => navigate(`/products/${product._id}`)}
+        src={product.images[0]}
         alt={product.name}
         className="w-24 h-24 object-cover rounded-xl cursor-pointer"
       />
       <div className="flex-1">
         <h3
           className="text-lg font-semibold cursor-pointer"
-          onClick={() => navigate(`/products/${product.id}`)}
+          onClick={() => navigate(`/products/${product._id}`)}
         >
           {product.name}
         </h3>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getCategories } from "../services/categories";
 import { ShoppingCart, User } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import { CartContext } from "../context/cart";
 
 export default function Header() {
   const [categories, setCategories] = useState([]);
+  const { quantity } = useContext(CartContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function Header() {
           >
             <ShoppingCart />
             <sup className="inline-flex items-center px-1.5 py-0.5 border-2 border-white rounded-full text-xs font-semibold leading-4 bg-red-500 text-white">
-              0
+              {quantity}
             </sup>
           </button>
         </div>
